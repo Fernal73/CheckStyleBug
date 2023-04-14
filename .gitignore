@@ -1,4 +1,3 @@
-init
 gen.error
 **/*.wsout
 **/lib/**
