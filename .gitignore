@@ -3,3 +3,4 @@ gen.error
 **/lib/**
 *xpath.xml
 *report.xml
+**/*.class
