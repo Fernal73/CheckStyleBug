@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="ant-sample"
+default="main" basedir=".">
+  <!-- Run this sample with ant checkstyle and you will recieve checkstyle_report.xml
+         file with one violation of ReturnNullInsteadOfBoolean check -->
+  <!-- ##########################################################################
+         ####################### target: checkstyle ###############################
+         ########################################################################## -->
+  <target name="checkstyle"
+  description="Generates a report of code convention violations."
+  depends="init">
+    <!-- See https://checkstyle.org/anttask.html
+             for full options of using checkstyle with ant-->
+    <checkstyle config="checkstyle.xml"
+    failureProperty="checkstyle.failure" failOnViolation="false">
+      <formatter type="xml" tofile="checkstyle_report.xml" />
+      <fileset dir="src" includes="**/*.java" />
+    </checkstyle>
+    <!-- secondary example if your classpath already includes checkstyle
+             and you want to include another jar with custom checks that is
+             in a custom location -->
+    <checkstyle config="checkstyle.xml" failOnViolation="false">
+      <formatter type="xml" tofile="checkstyle_report.xml" />
+      <fileset dir="src" includes="**/*.java" />
+    </checkstyle>
+  </target>
+  <target name="gen-suppressions" depends="init">
+    <delete file="suppressions-xpath.xml" />
+    <fileset dir="${basedir}" id="javasrcs">
+      <include name="**/*.java" />
+    </fileset>
+    <pathconvert property="sources" refid="javasrcs" pathsep="" />
+    <java fork="true"
+    classname="com.puppycrawl.tools.checkstyle.Main">
+      <classpath>
+        <path>
+          <fileset dir="lib" includes="*.jar" />
+        </path>
+      </classpath>
+      <arg line="-c" />
+      <arg line="checkstyle.xml" />
+      <arg line="-o" />
+      <arg line="suppressions-xpath.xml" />
+      <arg line="-g" />
+      <arg line="${sources}" />
+    </java>
+  </target>
+  <target name="gen-suppressions2" depends="init">
+    <delete file="suppressions-xpath.xml" />
+    <fileset dir="${basedir}" id="javasrcs">
+      <include name="**/*.java" />
+    </fileset>
+    <pathconvert property="sources" refid="javasrcs" pathsep="" />
+    <java fork="true"
+    classname="com.puppycrawl.tools.checkstyle.Main"
+    output="suppressions-xpath.xml" error="gen.error">
+      <classpath>
+        <path>
+          <fileset dir="lib" includes="*.jar" />
+        </path>
+      </classpath>
+      <arg line="-c" />
+      <arg line="checkstyle.xml" />
+      <arg line="-g" />
+      <arg line="${sources}" />
+    </java>
+  </target>
+  <target name="init">
+    <get src="https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.9.3/checkstyle-10.9.3-all.jar"
+    dest="lib/" skipexisting="true" />
+    <path id="execution.lib.path">
+      <fileset dir="lib" includes="*.jar" />
+    </path>
+    <!-- loading ant task -->
+    <taskdef name="checkstyle"
+    classname="com.puppycrawl.tools.checkstyle.ant.CheckstyleAntTask"
+    classpathref="execution.lib.path" />
+  </target>
+  <target name="main" depends="gen-suppressions,checkstyle">
+    <description>Main target</description>
+  </target>
+  <target name="main2" depends="gen-suppressions2,checkstyle">
+    <description>Main2 target</description>
+  </target>
+</project>

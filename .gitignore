@@ -1,0 +1,6 @@
+init
+gen.error
+**/*.wsout
+**/lib/**
+*xpath.xml
+*report.xml
