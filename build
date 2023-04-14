@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-wget -P lib https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.9.3/checkstyle-10.9.3-all.jar
