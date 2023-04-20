@@ -24,6 +24,26 @@ default="main" basedir=".">
       <fileset dir="src" includes="**/*.java" />
     </checkstyle>
   </target>
+  <target name="gen-suppressions3" depends="init">
+    <fileset dir="${basedir}" id="javasrcs">
+      <include name="**/*.java" />
+    </fileset>
+    <pathconvert property="sources" refid="javasrcs" pathsep="" />
+    <java fork="true"
+    classname="com.puppycrawl.tools.checkstyle.Main">
+      <classpath>
+        <path>
+          <fileset dir="lib" includes="*.jar" />
+        </path>
+      </classpath>
+      <arg line="-c" />
+      <arg line="checkstyle.xml" />
+      <arg line="-o" />
+      <arg line="suppressions-xpath.xml" />
+      <arg line="-g" />
+      <arg line="${sources}" />
+    </java>
+  </target>
   <target name="gen-suppressions" depends="init">
     <delete file="suppressions-xpath.xml" />
     <fileset dir="${basedir}" id="javasrcs">
@@ -68,6 +88,8 @@ default="main" basedir=".">
   <target name="init">
     <get src="https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.9.3/checkstyle-10.9.3-all.jar"
     dest="lib/" skipexisting="true" />
+    <get src="https://repo1.maven.org/maven2/com/github/sevntu-checkstyle/sevntu-checks/1.44.1/sevntu-checks-1.44.1.jar"
+    dest="lib/" skipexisting="true" />
     <path id="execution.lib.path">
       <fileset dir="lib" includes="*.jar" />
     </path>
@@ -81,5 +103,8 @@ default="main" basedir=".">
   </target>
   <target name="main2" depends="gen-suppressions2,checkstyle">
     <description>Main2 target</description>
+  </target>
+  <target name="main3" depends="gen-suppressions3,checkstyle">
+    <description>Main3 target</description>
   </target>
 </project>
